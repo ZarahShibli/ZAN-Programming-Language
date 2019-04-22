@@ -1,0 +1,236 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+
+/*------------------------------------------------------------
+----------- Compiler Project - CPCS 203 - Phase#3 ------------
+---------------------- ZAN Language --------------------------
+--------------------------------------------------------------
+---------------------- Team Members --------------------------
+------------------- * Afnan Balghaith ------------------------
+------------------- * Nura Dereya ----------------------------
+------------------- * Zaraah Shibli --------------------------
+*/
+options
+{
+  static = true;
+}
+
+PARSER_BEGIN(MyNewGrammar)
+package ZAN;
+import java.io.*;
+import java.util.Scanner;
+
+public class MyNewGrammar
+{
+  public static void main(String args []) throws ParseException
+  {
+    MyNewGrammar parser;
+    try
+    {
+	System.out.print("***************** (ZAN) LANGUAGE *****************\n" +
+          "Our language allow you to Enter many expressions.\n" + 
+          "  *.if statament like.. if (6+12) then 456-68!<;\n" +  
+          "  *.if statament like.. if (81-24) then 4-6==;\n" +
+          "  *.if statament like.. if (456%57) then _R452=12;\n" +
+          "  *.if statament like.. if (96*11) then _R=_q;\n" +
+          "  *.if statament like.. if (6+12) then 456-68!< else 445-87==;\n" +  
+           "  *.Addition operator like.. _R=45+547;\n" + 
+          "  *.Subtraction operator like.. _R=45-547;\n" + 
+          "  *.Multiplication operator like.. _R=45*547;\n" + 
+          "  *.Division operator like.. _R=45/547;\n" + 
+          "  *.Rate operator like.. _R=45%547;\n" +
+          "  *.Equal operator like.. 45-547==;\n" + 
+          "  *.Inequal operator like.. 45-547!=;\n" + 
+          "  *.Less than operator like.. 45-547!<;\n" + 
+          "  *.Greater than operator like.. 45-547<!;\n" + 
+          "  *.Less than or equal operator like.. 45-547<=;\n" + 
+          "  *.Greater than or equal operator like.. 45-547>=;\n" + 
+          "  *.Not operator like.. 45~;\n" +
+          "  *.Factorial operator like.. 45!;\n" + 
+          "**************************************************\n");
+          System.out.println("Enter an expression from the list above"+
+          "\n**(there is a space between the 'if' and the expretion and the 'then'): ");
+          parser = new MyNewGrammar(System.in);
+          MyNewGrammar.STMT();
+          System.out.println("Your statement is ");
+          System.out.println("Correct statement");
+          ////////////////////////////////////////////////////////////////////
+          
+    } // End try
+    catch (ParseException e)
+    {
+      System.out.println("Your statement is ");
+      System.out.println("Wrong statement! ");
+    } // End catch
+  } // End Main
+} // End class
+
+PARSER_END(MyNewGrammar)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : /* OPERATORS */
+{
+  < PLUS : "+" > //1
+| < MINUS : "-" > //2
+| < MULTIPLY : "*" > //3
+| < DIVIDE : "/" > //4
+| < POWER : "^" > //5
+| < RATE : "%" > //6
+| < ASSIGN : "=" >
+| < SQRT : "sqrt" > //7
+| < QUBIC : "qubic" > //8
+| < COS : "cos" > //9
+| < SIN : "sin" > //10
+| < TAN : "tan" > //11
+| < SEC : "sec" > //12
+| < CSC : "csc" > //13
+| < COT : "cot" > //14
+| < FACTORIAL : "!" > //15
+}
+
+TOKEN : /* LOGICAL */
+{
+  < AND : "&&" >
+| < OR : "\\" >
+| < NOT : "~" >
+}
+
+TOKEN : /* COMPARISON */
+{
+  < EQUALITY : "==" >
+| < INQUALITY : "!=" >
+| < LESS_THAN : "!<" > // symbol means less than
+| < GREATER_THAN : "<!" > // symbol means greater than
+| < LESS_THAN_EQUAL : "<=" >
+| < GREATER_THAN_EQUAL : ">=" >
+}
+
+TOKEN : /*CONDITIONS*/
+{
+  < IF : "if " >
+| < THEN : "then " >
+| < ELSE : "else " >
+| < SWITCH : "switch" >
+| < CASE : "case" >
+| < OUT : "out" > //equal to break in java
+| < CASE_NO : "caseNo" > //equal to default in java
+}
+
+TOKEN : /* ADDITIONAL TOKENS*/
+{
+  < TRUE : "TRUE" >
+| < FALSE : "false" >
+| < NULL : "null" >
+| < FOR : "for" >
+| < DO : "do" >
+| < WHILE : "while" >
+| < RETURN : "return" >
+}
+
+TOKEN : /* DIGITS && STOP TOKENS*/
+{
+  < #DIGIT : [ "0"-"9" ] >
+| < LETTER :
+    [ "A"-"Z" ]
+  | [ "a"-"z" ] >
+| < MORE_DIGIT : (< DIGIT >)+ >
+| < STOP : ";" >
+}
+
+//*******************************************************************
+//***************************** Methods *****************************
+//
+void STMTS() :
+{
+}
+{
+  STMT() < STOP >
+  {
+  }
+}
+void STMT() :
+{
+}
+{
+  (
+    IDENTIFER() < ASSIGN > EXPERETION()
+  | TERM() POST_OPERATION ()
+  | IF_EXPERETION()
+  )
+  {
+  }
+}
+
+void POST_OPERATION ():
+{
+}
+{
+  (
+    (
+    "-" TERM()
+    (
+      < AND >
+    | < OR >
+    | < EQUALITY >
+    | < INQUALITY >
+    | < LESS_THAN >
+    | <GREATER_THAN >
+    | < LESS_THAN_EQUAL >
+    | < GREATER_THAN_EQUAL >
+    )) |<NOT > |< FACTORIAL >)
+  
+  {
+  }
+}
+void IDENTIFER() :
+{
+}
+{
+  "_" < LETTER > (< MORE_DIGIT >)?
+  {
+  }
+}
+
+void EXPERETION() :
+{
+}
+{
+  TERM()
+  (
+    (
+    < MULTIPLY >
+  | < RATE >
+  | < DIVIDE >
+  | < PLUS >
+  | < MINUS >
+  )
+  EXPERETION())?
+  {
+  }
+}
+
+void TERM() :
+{}
+{
+  < MORE_DIGIT >
+| IDENTIFER()
+  {
+  }
+}
+
+void IF_EXPERETION() :
+{
+}
+{
+  < IF > "("EXPERETION()")" < THEN > STMT () (< ELSE > STMT())?
+  {
+  }
+}
